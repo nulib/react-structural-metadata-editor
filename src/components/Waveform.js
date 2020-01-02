@@ -88,18 +88,16 @@ class Waveform extends Component {
           tabIndex="0"
           data-testid="waveform"
         />
-        {(streamMediaLoading && !streamMediaError) && (
+        {streamMediaLoading && !streamMediaError && (
           <div data-testid="loading-spinner">
             <LoadingSpinner isLoading={streamMediaLoading} />
           </div>
         )}
-        {streamMediaError &&
-          <AlertContainer {...alertObj} />
-        }
+        {streamMediaError && <AlertContainer {...alertObj} />}
         <audio ref={this.mediaPlayer} hidden={true}>
           Your browser does not support the audio element.
         </audio>
-        {(!streamMediaLoading && !streamMediaError) && (
+        {!streamMediaLoading && !streamMediaError && (
           <Row data-testid="waveform-toolbar">
             <Col xs={6} md={6}>
               <VolumeSlider volume={volume} setVolume={this.setVolume} />
@@ -150,7 +148,4 @@ const mapDispatchToProps = {
   retrieveStreamMedia: retrieveStreamMedia
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Waveform);
+export default connect(mapStateToProps, mapDispatchToProps)(Waveform);

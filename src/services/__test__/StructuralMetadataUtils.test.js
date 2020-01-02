@@ -136,6 +136,16 @@ describe('StructuralMetadataUtils class', () => {
       const timespan = smu.findItem('123a-456b-789c-3d', structure);
       expect(timespan.end).toEqual('00:28:58.950');
     });
+    test('when begin time == end time', () => {
+      const timespan = smu.findItem('123a-456b-789c-5d', structure);
+      expect(timespan.begin).toEqual('00:01:00.000');
+      expect(timespan.end).toEqual('00:02:00.000');
+    });
+    test('when begin time > end time', () => {
+      const timespan = smu.findItem('123a-456b-789c-4d', structure);
+      expect(timespan.begin).toEqual('00:02:00.000');
+      expect(timespan.end).toEqual('00:03:00.000');
+    });
   });
 
   describe('tests new time overlaps existing time ranges', () => {

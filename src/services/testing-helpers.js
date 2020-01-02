@@ -117,6 +117,20 @@ export const testDataFromServer = [
     items: [
       {
         type: 'span',
+        label: 'Invalid segment: begin < end',
+        id: '123a-456b-789c-5d',
+        begin: '1.0',
+        end: '00:00:00'
+      },
+      {
+        type: 'span',
+        label: 'Invalid segment: begin == end',
+        id: '123a-456b-789c-4d',
+        begin: '00:02:00',
+        end: '2'
+      },
+      {
+        type: 'span',
         label: 'First segment',
         id: '123a-456b-789c-1d',
         begin: '3',

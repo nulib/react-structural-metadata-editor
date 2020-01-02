@@ -68,30 +68,8 @@ export default class StructuralMetadataUtils {
    * @param {Float} duration - end time of the media file in Milliseconds
    */
   buildSMUI(allItems, duration) {
-    // Regex to match mm:ss OR seconds(as a float)/minutes(as an int)
-    const regexHHMMSS = /^([0-9]*:[0-9]*:[0-9]*.[0-9]*)$/i;
-    const regexSS = /^([0-9]*.[0-9]*)$/i;
-
     // Convert file duration to seconds
     const durationInSeconds = Math.round(duration / 10) / 100;
-
-    // Convert time to HH:mm:ss.ms format to use in validation logic
-    let convertToSeconds = time => {
-      if (regexSS.test(time)) {
-        let [minutes, seconds] = time.split('.');
-        let minutesInS = parseInt(minutes) * 60;
-        let secondsNum = seconds ? parseFloat(seconds) : 0.0;
-        return minutesInS + secondsNum;
-      }
-      if (regexHHMMSS.test(time)) {
-        let [seconds, minutes, hours] = time.split(':').reverse();
-        let hoursInS = hours ? parseInt(hours) * 3600 : 0;
-        let minutesInS = parseInt(minutes) * 60;
-        let secondsNum = seconds === '' ? 0.0 : parseFloat(seconds);
-        return hoursInS + minutesInS + secondsNum;
-      }
-      return this.toMs(time) / 1000;
-    };
 
     let decodeHTML = lableText => {
       return lableText
@@ -108,11 +86,16 @@ export default class StructuralMetadataUtils {
         item.label = decodeHTML(item.label);
         if (item.type === 'span') {
           const { begin, end } = item;
-          let beginTime = convertToSeconds(begin);
-          let endTime = convertToSeconds(end);
+          let beginTime = this.convertToSeconds(begin);
+          let endTime = this.convertToSeconds(end);
           item.begin = this.toHHmmss(beginTime);
-          if (beginTime > endTime) {
-            item.end = this.toHHmmss(durationInSeconds);
+          if (beginTime >= endTime) {
+            const timeExpanded = this.expandItem(
+              beginTime,
+              durationInSeconds,
+              allItems
+            );
+            item.end = this.toHHmmss(timeExpanded);
           } else if (endTime > durationInSeconds) {
             item.end = this.toHHmmss(durationInSeconds);
           } else {
@@ -127,6 +110,50 @@ export default class StructuralMetadataUtils {
 
     formatItems(allItems);
     return allItems;
+  }
+
+  /**
+   * Convert time to seconds from string format
+   * @param {String} time - time in either HH:mm:ss.ms/mm.ss format
+   */
+  convertToSeconds(time) {
+    // Regex to match mm:ss OR seconds(as a float)/minutes(as an int)
+    const regexHHMMSS = /^([0-9]*:[0-9]*:[0-9]*.[0-9]*)$/i;
+    const regexSS = /^([0-9]*.[0-9]*)$/i;
+
+    if (regexSS.test(time)) {
+      let [minutes, seconds] = time.split('.');
+      let minutesInS = parseInt(minutes) * 60;
+      let secondsNum = seconds ? parseFloat(seconds) : 0.0;
+      return minutesInS + secondsNum;
+    }
+    if (regexHHMMSS.test(time)) {
+      let [seconds, minutes, hours] = time.split(':').reverse();
+      let hoursInS = hours ? parseInt(hours) * 3600 : 0;
+      let minutesInS = parseInt(minutes) * 60;
+      let secondsNum = seconds === '' ? 0.0 : parseFloat(seconds);
+      return hoursInS + minutesInS + secondsNum;
+    }
+    return this.toMs(time) / 1000;
+  }
+
+  /**
+   * When timespan is invalid, change end tim to span until next timespan
+   * Example: when begin > end, set the end time to begin time of next timespan
+   * @param {Number} beginTime - start time of the current timspan
+   * @param {Number} duration - entire duration of the media file
+   * @param {Array} allItems - array of all items in structure
+   */
+  expandItem(beginTime, duration, allItems) {
+    const allSpans = this.getItemsOfType('span', allItems);
+    const spanAfter = allSpans.filter(
+      span => this.convertToSeconds(span.begin) > beginTime
+    );
+    if (spanAfter.length > 0) {
+      return this.convertToSeconds(spanAfter[0].begin);
+    } else {
+      return duration;
+    }
   }
 
   /**
