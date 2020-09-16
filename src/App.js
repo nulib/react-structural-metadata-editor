@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
-import './App.css';
-import WaveformContainer from './containers/WaveformContainer';
-import ButtonSection from './components/ButtonSection';
-import StructureOutputContainer from './containers/StructureOutputContainer';
 import { DragDropContextProvider } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { connect } from 'react-redux';
+import { Container } from '@material-ui/core';
+
+import WaveformContainer from './containers/WaveformContainer';
+import ButtonSection from './components/ButtonSection';
+import StructureOutputContainer from './containers/StructureOutputContainer';
 import { resetReduxStore } from './actions';
 import { handleStructureError } from './actions/forms';
 import ErrorBoundary from './components/ErrorBoundary';
@@ -17,15 +18,17 @@ import {
   faMinusCircle,
   faPen,
   faSave,
-  faTrash
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 library.add(faDotCircle, faMinusCircle, faPen, faSave, faTrash);
+
+import './App.css';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      structureAlert: {}
+      structureAlert: {},
     };
   }
   // Lifecycle method fired before unmounting the React component
@@ -39,14 +42,14 @@ class App extends Component {
     this.props.handleStructureError(0);
   };
 
-  structureIsSaved = value => {
+  structureIsSaved = (value) => {
     this.props.structureIsSaved(value);
   };
 
   render() {
     return (
       <DragDropContextProvider backend={HTML5Backend}>
-        <div className="sme-container">
+        <Container id="sme-container">
           <WaveformContainer
             {...this.props}
             structureAlert={this.state.structureAlert}
@@ -59,7 +62,7 @@ class App extends Component {
               {...this.props}
             />
           </ErrorBoundary>
-        </div>
+        </Container>
       </DragDropContextProvider>
     );
   }
@@ -67,7 +70,7 @@ class App extends Component {
 
 const mapDispatchToProps = {
   resetStore: resetReduxStore,
-  handleStructureError: handleStructureError
+  handleStructureError: handleStructureError,
 };
 
 export default connect(null, mapDispatchToProps)(App);

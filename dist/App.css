@@ -1,11 +1,12 @@
-.sme-container {
-  padding-right: 15px;
-  padding-left: 15px;
-  margin-right: auto;
-  margin-left: auto;
+html {
+  overflow-y: scroll;
 }
 
-.sme-container section {
+#sme-container {
+  min-width: 100%;
+}
+
+#sme-container section {
   margin-bottom: 10px;
 }
 
@@ -54,7 +55,6 @@
 }
 
 /* Waveform */
-#waveform-container,
 #zoomview-container,
 #overview-container {
   box-shadow: 3px 3px 20px #919191;
@@ -64,6 +64,31 @@
   line-height: 0;
   margin-bottom: 15px;
 }
+
+#zoomview-container .konvajs-content {
+  width: inherit !important;
+}
+
+#waveform-container {
+  margin: 12px auto;
+}
+
+/* .zoomview-container {
+  box-shadow: 3px 3px 20px #919191;
+  -moz-box-shadow: 3px 3px 20px #919191;
+  -webkit-box-shadow: 3px 3px 20px #919191;
+  margin: 24px 0 24px 0;
+  line-height: 0;
+}
+
+.overview-container {
+  box-shadow: 3px 3px 20px #919191;
+  -moz-box-shadow: 3px 3px 20px #919191;
+  -webkit-box-shadow: 3px 3px 20px #919191;
+  margin: 0 0 24px 0;
+  line-height: 0;
+  height: 85px;
+} */
 
 #overview-container {
   height: 85px;

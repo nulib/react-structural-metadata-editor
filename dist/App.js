@@ -27,19 +27,19 @@ var _defineProperty2 = _interopRequireDefault(require("@babel/runtime/helpers/de
 
 var _react = _interopRequireWildcard(require("react"));
 
-require("./App.css");
+var _reactDnd = require("react-dnd");
+
+var _reactDndHtml5Backend = _interopRequireDefault(require("react-dnd-html5-backend"));
+
+var _reactRedux = require("react-redux");
+
+var _core = require("@material-ui/core");
 
 var _WaveformContainer = _interopRequireDefault(require("./containers/WaveformContainer"));
 
 var _ButtonSection = _interopRequireDefault(require("./components/ButtonSection"));
 
 var _StructureOutputContainer = _interopRequireDefault(require("./containers/StructureOutputContainer"));
-
-var _reactDnd = require("react-dnd");
-
-var _reactDndHtml5Backend = _interopRequireDefault(require("react-dnd-html5-backend"));
-
-var _reactRedux = require("react-redux");
 
 var _actions = require("./actions");
 
@@ -50,6 +50,8 @@ var _ErrorBoundary = _interopRequireDefault(require("./components/ErrorBoundary"
 var _fontawesomeSvgCore = require("@fortawesome/fontawesome-svg-core");
 
 var _freeSolidSvgIcons = require("@fortawesome/free-solid-svg-icons");
+
+require("./App.css");
 
 // Font Awesome Imports
 _fontawesomeSvgCore.library.add(_freeSolidSvgIcons.faDotCircle, _freeSolidSvgIcons.faMinusCircle, _freeSolidSvgIcons.faPen, _freeSolidSvgIcons.faSave, _freeSolidSvgIcons.faTrash);
@@ -92,8 +94,8 @@ function (_Component) {
     value: function render() {
       return _react["default"].createElement(_reactDnd.DragDropContextProvider, {
         backend: _reactDndHtml5Backend["default"]
-      }, _react["default"].createElement("div", {
-        className: "sme-container"
+      }, _react["default"].createElement(_core.Container, {
+        id: "sme-container"
       }, _react["default"].createElement(_WaveformContainer["default"], (0, _extends2["default"])({}, this.props, {
         structureAlert: this.state.structureAlert
       })), _react["default"].createElement(_ErrorBoundary["default"], null, _react["default"].createElement(_ButtonSection["default"], null), _react["default"].createElement(_StructureOutputContainer["default"], (0, _extends2["default"])({
